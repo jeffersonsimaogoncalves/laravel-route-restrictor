@@ -6,6 +6,7 @@ use App;
 use Auth;
 use Closure;
 use Exception;
+use Request;
 
 class BasicAuthentication
 {
@@ -19,9 +20,25 @@ class BasicAuthentication
 
     private function validate($user, $password)
     {
+      // Get current route name
+      $routeName = Request::route()->getName();
+
+      if ($routeName) {
+        // Check if route username and password are set
+        if (!$routeUsername = env('routerestrictor.route.'.$routeName.'.username') || !$routePassword = env('routerestrictor.route.'.$routeName.'.password')) {
+          throw new Exception('Laravel Route Restrictor route username and password are not set in environment file.');
+        }
+
+        // Check against route password
+        if (trim($user) === $routeUsername && trim($password) === $routePassword) {
+          return true;
+        }
+      }
+
+
       // Check if global username and password are set
       if (!$globalUsername = env('routerestrictor.global.username') || !$globalPassword = env('routerestrictor.global.password')) {
-        throw new Exception('laravel route restrictor global username and password are not set in environment file.');
+        throw new Exception('Laravel Route Restrictor global username and password are not set in environment file.');
       }
 
       // Check against global password

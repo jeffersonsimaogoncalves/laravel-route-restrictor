@@ -23,16 +23,18 @@ class BasicAuthentication
       // Get current route name
       $routeName = Request::route()->getName();
 
+      // If we have a named route
       if ($routeName) {
+
         // Check if route username and password are set
-        if (!$routeUsername = env('routerestrictor.route.'.$routeName.'.username') || !$routePassword = env('routerestrictor.route.'.$routeName.'.password')) {
-          throw new Exception('Laravel Route Restrictor route username and password are not set in environment file.');
+        if ($routeUsername = env('routerestrictor.route.'.$routeName.'.username') && $routePassword = env('routerestrictor.route.'.$routeName.'.password')) {
+
+          // Check against route password
+          if (trim($user) === $routeUsername && trim($password) === $routePassword) {
+            return true;
+          }
         }
 
-        // Check against route password
-        if (trim($user) === $routeUsername && trim($password) === $routePassword) {
-          return true;
-        }
       }
 
 

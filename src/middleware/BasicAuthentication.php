@@ -5,8 +5,7 @@ namespace DivineOmega\LaravelRouteRestrictor\Middleware;
 use App;
 use Auth;
 use Closure;
-use Exception;
-use Request;
+use Illuminate\Http\Request;
 
 class BasicAuthentication
 {

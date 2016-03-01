@@ -12,8 +12,23 @@ class BasicAuthentication
 {
   public function handle($request, Closure $next)
   {
-    $username = $request->getUser();
-    $password = $request->getPassword();
+    // Note: This ugly hack is required for web servers in which PHP is run
+    // via a CGI handler. In these cases, PHP does not have access to the
+    // $_SERVER['PHP_AUTH_USER'] and $_SERVER['PHP_AUTH_PW'] variables.
+    // Therefore, we must use a .htaccess rule to rewrite the raw basic
+    // authentication data into a $_SERVER varaible, and then the below
+    // code will convert this to the $_SERVER['PHP_AUTH_USER'] and
+    // $_SERVER['PHP_AUTH_PW'] variables we need.
+    // For this to work, the following line must be placed in your
+    // `public/.htaccess` file under `RewriteEngine On`.
+    // RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]
+  	if (isset($_SERVER["REDIRECT_REMOTE_USER"]) && $_SERVER["REDIRECT_REMOTE_USER"] != '') {
+  	  $d = base64_decode(substr($_SERVER["REDIRECT_REMOTE_USER"], 6));
+  	  list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) = explode(':', $d);
+  	}
+
+    $username = $_SERVER['PHP_AUTH_USER'];
+    $password = $_SERVER['PHP_AUTH_PW'];
 
     if (!$this->validate($request,$username, $password)) {
       header('WWW-Authenticate: Basic');

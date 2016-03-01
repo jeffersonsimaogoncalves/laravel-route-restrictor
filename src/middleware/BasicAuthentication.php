@@ -39,13 +39,13 @@ class BasicAuthentication
 
 
       // Check if global username and password are set
-      if (!$globalUsername = env('routerestrictor.global.username') || !$globalPassword = env('routerestrictor.global.password')) {
-        throw new Exception('Laravel Route Restrictor global username and password are not set in environment file.');
-      }
+      if ($globalUsername = env('routerestrictor.global.username') && $globalPassword = env('routerestrictor.global.password')) {
 
-      // Check against global password
-      if (trim($user) === $globalUsername && trim($password) === $globalPassword) {
-        return true;
+        // Check against global password
+        if (trim($user) === $globalUsername && trim($password) === $globalPassword) {
+          return true;
+        }
+
       }
 
       return false;

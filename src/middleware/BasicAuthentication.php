@@ -5,7 +5,6 @@ namespace DivineOmega\LaravelRouteRestrictor\Middleware;
 use App;
 use Auth;
 use Closure;
-use Illuminate\Http\Request;
 
 class BasicAuthentication
 {
@@ -20,7 +19,7 @@ class BasicAuthentication
   private function validate($user, $password)
   {
     // Get current route name
-    $routeName = Request::route()->getName();
+    $routeName = \Request::route()->getName();
 
     // If we have a named route
     if ($routeName) {

@@ -6,7 +6,7 @@ Laravel 5.1 Middleware to restrict a site or specific routes using HTTP basic au
 
 1. Add `"divineomega/laravel-route-restrictor": "dev-master"` to the `require` section of your `composer.json` file.
 2. Run `composer update divineomega/laravel-route-restrictor` (or just `composer update`).
-3. Add `\DivineOmega\LaravelRouteRestrictor\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
+3. Add `\DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
 4. Add `RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]` immediately below `RewriteEngine On` in your `public/.htaccess` file. This is required for web servers that are configured to use CGI as their PHP handler.
 
 ## Global restriction

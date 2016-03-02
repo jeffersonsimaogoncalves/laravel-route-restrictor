@@ -16,7 +16,7 @@ class BasicAuthentication
     // via a CGI handler. In these cases, PHP does not have access to the
     // $_SERVER['PHP_AUTH_USER'] and $_SERVER['PHP_AUTH_PW'] variables.
     // Therefore, we must use a .htaccess rule to rewrite the raw basic
-    // authentication data into a $_SERVER varaible, and then the below
+    // authentication data into a $_SERVER variable, and then the below
     // code will convert this to the $_SERVER['PHP_AUTH_USER'] and
     // $_SERVER['PHP_AUTH_PW'] variables we need.
     // For this to work, the following line must be placed in your

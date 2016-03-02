@@ -5,7 +5,7 @@
     "homepage": "https://github.com/DivineOmega/laravel-route-restrictor",
     "license": "LGPL3",
     "require": {
-        "php": ">=5.2.1",
+        "php": ">=5.5.9",
         "illuminate/contracts": "^5.1|^5.2",
         "illuminate/support": "^5.1|^5.2"
     },

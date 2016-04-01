@@ -44,7 +44,7 @@ class BasicAuthentication
         $password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] :  '';
 
         if (!$this->validate($request, $username, $password)) {
-            throw new Unauthorized('Basic', 'Unauthorized. Please check your username and password.');
+            throw new UnauthorizedHttpException('Basic', 'Unauthorized. Please check your username and password.');
         }
 
         return $next($request);

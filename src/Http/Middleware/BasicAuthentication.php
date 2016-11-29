@@ -65,7 +65,12 @@ class BasicAuthentication
         // Note: we do not have access to the current route in middleware, because
         // it has not been fully dispatched, therefore we must use the backwards
         // method of finding the route which matches the current request.
-        $routeName = Route::getRoutes()->match($request)->getName();
+        $routeName = null;
+        foreach(Route::getRoutes() as $route) {
+            if ($route->matches($request)) {
+                $routeName = $route->getName();
+            }
+        }
 
         // If we have a named route
         if ($routeName) {

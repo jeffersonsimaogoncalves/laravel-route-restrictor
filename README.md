@@ -7,13 +7,22 @@ Laravel Route Restrictor is a middleware package designed to restrict a entire s
 1. Run `composer require divineomega/laravel-route-restrictor`.
 2. Add `DivineOmega\LaravelRouteRestrictor\Providers\LaravelRouteRestrictorServiceProvider::class` to the `$providers` array in your `config/app.php` file.
 3. Run `php artisan vendor:publish --provider="DivineOmega\LaravelRouteRestrictor\Providers\LaravelRouteRestrictorServiceProvider"`.
-3. Add `\DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
-4. Add `'routeRestrictor' => \DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$routeMiddleware` array in your `app/Http/Kernel.php` file.
-5. Add `RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]` immediately below `RewriteEngine On` in your `public/.htaccess` file. This is required for web servers that are configured to use CGI as their PHP handler.
+4. Add `\DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
+5. Add `'routeRestrictor' => \DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$routeMiddleware` array in your `app/Http/Kernel.php` file.
+6. Add `RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]` immediately below `RewriteEngine On` in your `public/.htaccess` file. This is required for web servers that are configured to use CGI as their PHP handler.
 
 ## Global restriction
 
-In order to restrict all routes in your Laravel application, just add the global username and password to your `config/laravel-route-restrictor.php` file. Your entire application will then be protected by these details, unless a route specific restriction is in place.
+In order to restrict all routes in your Laravel application, just add the global username and password to your `.env` file as follows. Ensure you change the `username` and `password` values.
+
+```
+ROUTE_RESTRICTOR_GLOBAL_USERNAME=username
+ROUTE_RESTRICTOR_GLOBAL_PASSWORD=password
+```
+
+Your entire application will then be protected by these details, unless a route specific restriction is in place.
+
+Alternatively, you can modify the global restriction username and password in your `config/laravel-route-restrictor.php` configuration file.
 
 ## Restricting specific routes
 

@@ -2,13 +2,14 @@
 
 namespace DivineOmega\LaravelRouteRestrictor\Providers;
 
+use Illuminate\Support\ServiceProvider;
 
 /**
  * Service Provider for Laravel Route Restrictor package
  *
  * @author Jordan Hall <jordan.hall@rapidweb.biz>
  */
-class LaravelRouteRestrictorServiceProvider
+class LaravelRouteRestrictorServiceProvider extends ServiceProvider
 {
     /**
     * Perform post-registration booting of services.

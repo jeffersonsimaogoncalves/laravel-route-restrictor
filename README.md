@@ -29,7 +29,7 @@ Alternatively, you can modify the global restriction username and password in yo
 To restrict specific routes, you must edit your routing file at `app/Http/routes.php`. Simply surround the route or routes you want to restrict with the following route group code. Ensure you change the `username` and `password` middleware parameters.
 
 ```php
-Route::group(['middleware' => 'routeRestrictor:username:password'], function () {
+Route::group(['middleware' => 'routeRestrictor:username,password'], function () {
     // Route(s) to restrict go here
 });
 ```

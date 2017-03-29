@@ -86,7 +86,7 @@ class BasicAuthentication
             }
         }
         // Check if global username and password are set
-        elseif ($globalUsername = config('laravel-route-restrictor.global.username') && $globalPassword = config('laravel-route-restrictor.global.password')) {
+        elseif (($globalUsername = config('laravel-route-restrictor.global.username')) && ($globalPassword = config('laravel-route-restrictor.global.password'))) {
             
             // Check against global password
             if (trim($user) == $globalUsername && trim($password) == $globalPassword) {

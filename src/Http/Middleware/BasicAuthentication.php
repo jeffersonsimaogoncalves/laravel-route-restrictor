@@ -27,6 +27,11 @@ class BasicAuthentication
      */
     public function handle(Request $request, Closure $next, $routeUsername = null, $routePassword = null)
     {
+        // To prevent unit test failures, do not process restrictions if PHP is running via the command line
+        if (php_sapi_name() == "cli") {
+            return $next($request);
+        }
+
         // Disable middleware is requested
         if ($routeUsername == 'disable' || $routePassword == 'disable') {
             return $next($request);

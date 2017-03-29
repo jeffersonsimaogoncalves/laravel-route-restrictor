@@ -33,6 +33,6 @@ If you wish to exclude one or more routes from restriction, you must edit your r
 
 ```php
 Route::group(['middleware' => 'routeRestrictor:disable'], function () {
-    // Route(s) to exclude from global restriction go here
+    // Route(s) to exclude from restriction go here
 });
 ```

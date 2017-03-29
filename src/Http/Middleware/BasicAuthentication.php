@@ -74,7 +74,7 @@ class BasicAuthentication
         if ($routeUsername && $routePassword) {
 
             // Check against route password
-            if (trim($user) == $routeUser && trim($password) == $routePassword) {
+            if (trim($user) == $routeUsername && trim($password) == $routePassword) {
                 return true;
             } else {
                 return false;

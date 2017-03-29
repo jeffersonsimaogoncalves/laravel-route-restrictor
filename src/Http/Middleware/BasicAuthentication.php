@@ -70,19 +70,23 @@ class BasicAuthentication
      */
     protected function validate($request, $user, $password, $routeUsername = null, $routePassword = null)
     {
-        // If we have a route specific username and password, it takes priortity
-        if ($routeUsername && $routePassword) {
+        // If we're dealing with a route with a route specific restriction, it takes priortity over global restriction.
+        if ($this->specificRouteRestrictionExists()) {
 
-            // Check against route password
-            if (trim($user) == $routeUsername && trim($password) == $routePassword) {
-                return true;
-            } else {
-                return false;
+            // If we have a route specific username and password, check against them.
+            if ($routeUsername && $routePassword) {
+
+                // Check against route password
+                if (trim($user) == $routeUsername && trim($password) == $routePassword) {
+                    return true;
+                } else {
+                    return false;
+                }
+
             }
         }
-
         // Check if global username and password are set
-        if ($globalUsername = config('laravel-route-restrictor.global.username') && $globalPassword = config('laravel-route-restrictor.global.password')) {
+        elseif ($globalUsername = config('laravel-route-restrictor.global.username') && $globalPassword = config('laravel-route-restrictor.global.password')) {
             
             // Check against global password
             if (trim($user) == $globalUsername && trim($password) == $globalPassword) {
@@ -93,5 +97,32 @@ class BasicAuthentication
         }
 
         return true;
+    }
+
+    /**
+     * Checks if the current route has an associated 'routeRestrictor'' middleware (i.e. a route specific restriction).
+     *
+     * @return bool
+     */
+    private function specificRouteRestrictionExists()
+    {
+        $routes = app('router')->getRoutes()->match(app('request')->create($_SERVER['REQUEST_URI']));
+
+        if (!$routes) {
+            throw new Exception('Error determining current route.');
+        }
+
+        if (count($routes) != 1) {
+            $routes = $routes->first();
+        }
+        
+        foreach($routes->middleware() as $routeMiddleware) {
+            $routeMiddlewareParts = explode(':', $routeMiddleware);
+            if ($routeMiddlewareParts[0]=='routeRestrictor') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

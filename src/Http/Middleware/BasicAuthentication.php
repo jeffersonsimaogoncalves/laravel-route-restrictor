@@ -20,11 +20,18 @@ class BasicAuthentication
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
+     * @param string                   $routeUsername
+     * @param string                   $routePassword
      *
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $routeUsername = null, $routePassword = null)
     {
+        // Disable middleware is requested
+        if ($routeUsername == 'disable' || $routePassword == 'disable') {
+            return $next($request);
+        }
+
         // Note: This ugly hack is required for web servers in which PHP is run
         // via a CGI handler. In these cases, PHP does not have access to the
         // $_SERVER['PHP_AUTH_USER'] and $_SERVER['PHP_AUTH_PW'] variables.
@@ -43,7 +50,7 @@ class BasicAuthentication
         $username = isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] :  '';
         $password = isset($_SERVER['PHP_AUTH_PW']) ? $_SERVER['PHP_AUTH_PW'] :  '';
 
-        if (!$this->validate($request, $username, $password)) {
+        if (!$this->validate($request, $username, $password, $routeUsername, $routePassword)) {
             throw new UnauthorizedHttpException('Basic', 'Unauthorized. Please check your username and password.');
         }
 
@@ -56,37 +63,27 @@ class BasicAuthentication
      * @param \Illuminate\Http\Request $request
      * @param string                   $user
      * @param string                   $password
+     * @param string                   $routeUsername
+     * @param string                   $routePassword
      *
      * @return bool
      */
-    protected function validate($request, $user, $password)
+    protected function validate($request, $user, $password, $routeUsername = null, $routePassword = null)
     {
-        // Get current route name
-        // Note: we do not have access to the current route in middleware, because
-        // it has not been fully dispatched, therefore we must use the backwards
-        // method of finding the route which matches the current request.
-        $routeName = null;
-        foreach(Route::getRoutes() as $route) {
-            if ($route->matches($request)) {
-                $routeName = $route->getName();
-            }
-        }
+        // If we have a route specific username and password, it takes priortity
+        if ($routeUsername && $routePassword) {
 
-        // If we have a named route
-        if ($routeName) {
-            // Check if route username and password are set
-            if ($routeUsername = env('ROUTE_RESTRICTOR_ROUTE_'.strtoupper($routeName).'_USERNAME') && $routePassword = env('ROUTE_RESTRICTOR_ROUTE_'.strtoupper($routeName).'_PASSWORD')) {
-                // Check against route password
-                if (trim($user) == $routeUsername && trim($password) == $routePassword) {
-                    return true;
-                } else {
-                    return false;
-                }
+            // Check against route password
+            if (trim($user) == $routeUser && trim($password) == $routePassword) {
+                return true;
+            } else {
+                return false;
             }
         }
 
         // Check if global username and password are set
-        if ($globalUsername = env('ROUTE_RESTRICTOR_GLOBAL_USERNAME') && $globalPassword = env('ROUTE_RESTRICTOR_GLOBAL_PASSWORD')) {
+        if ($globalUsername = config('laravel-route-restrictor.global.username') && $globalPassword = config('laravel-route-restrictor.global.password')) {
+            
             // Check against global password
             if (trim($user) == $globalUsername && trim($password) == $globalPassword) {
                 return true;

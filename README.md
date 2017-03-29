@@ -1,30 +1,38 @@
 # Laravel Route Restrictor
 
-Laravel 5.1 Middleware to restrict a site or specific routes using HTTP basic authentication
+Laravel Route Restrictor is a middleware package designed to restrict a entire site or specific routes using HTTP basic authentication. It is compatible with Laravel 5.1 or above.
 
 ## Setup
 
 1. Run `composer require divineomega/laravel-route-restrictor`.
-2. Add `\DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
-3. Add `RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]` immediately below `RewriteEngine On` in your `public/.htaccess` file. This is required for web servers that are configured to use CGI as their PHP handler.
+2. Add `\DivineOmega\LaravelRouteRestrictor\Providers\LaravelRouteRestrictorServiceProvider::class` to the `$providers` array in your `config/app.php` file.
+3. Run `php artisan vendor:publish --provider="\DivineOmega\LaravelRouteRestrictor\Providers\LaravelRouteRestrictorServiceProvider"`.
+3. Add `\DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$middleware` array in your `app/Http/Kernel.php` file.
+4. Add `'routeRestrictor' => \DivineOmega\LaravelRouteRestrictor\Http\Middleware\BasicAuthentication::class` to the `$routeMiddleware` array in your `app/Http/Kernel.php` file.
+5. Add `RewriteRule .* - [E=REMOTE_USER:%{HTTP:Authorization}]` immediately below `RewriteEngine On` in your `public/.htaccess` file. This is required for web servers that are configured to use CGI as their PHP handler.
 
 ## Global restriction
 
-In order to restrict all routes in your Laravel application, add the following to your `.env` file.
-
-```
-ROUTE_RESTRICTOR_GLOBAL_USERNAME=cat
-ROUTE_RESTRICTOR_GLOBAL_PASSWORD=hat
-```
+In order to restrict all routes in your Laravel application, just add the global username and password to your `config/laravel-route-restrictor.php` file. Your entire application will then be protected by these details, unless a route specific restriction is in place.
 
 ## Restricting specific routes
 
-To restrict specific routes, you must be using [named routes](https://laravel.com/docs/5.1/routing#named-routes). Once you have a named route you wish to restrict, add the following to your `.env` file.
+To restrict specific routes, you must edit your routing file at `app/Http/routes.php`. Simply surround the route or routes you want to restrict with the following route group code. Ensure you change the `username` and `password` middleware parameters.
 
+```php
+Route::group(['middleware' => 'routeRestrictor:username:password'], function () {
+    // Route(s) to restrict go here
+});
 ```
-ROUTE_RESTRICTOR_ROUTE_MYNAMEDROUTE_USERNAME=fat
-ROUTE_RESTRICTOR_ROUTE_MYNAMEDROUTE_PASSWORD=cat
-```
-Replace `MYNAMEDROUTE` with your route's name, capitalised. You can add as many route specific restrictions as you wish by repeating the above section as required.
 
 Note: If you have both route specific restrictions and a global restriction, both will work, but route specific restrictions will take priority.
+
+## Excluding specific routes from restriction
+
+If you wish to exclude one or more routes from restriction, you must edit your routing file at `app/Http/routes.php`. Simply surround the route or routes you want to exclude with the following route group code.
+
+```php
+Route::group(['middleware' => 'routeRestrictor:disable'], function () {
+    // Route(s) to exclude from global restriction go here
+});
+```

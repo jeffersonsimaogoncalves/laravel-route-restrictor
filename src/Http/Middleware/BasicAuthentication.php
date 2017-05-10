@@ -111,7 +111,9 @@ class BasicAuthentication
      */
     private function specificRouteRestrictionExists()
     {
-        $routes = app('router')->getRoutes()->match(app('request')->create($_SERVER['REQUEST_URI']));
+        
+        $routes = app('router')->getRoutes()->match(app('request')->create($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']));
+
 
         if (!$routes) {
             throw new Exception('Error determining current route.');

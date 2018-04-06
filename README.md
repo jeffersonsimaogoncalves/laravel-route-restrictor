@@ -1,4 +1,4 @@
-# 🔒 Laravel Route Restrictor
+# 🚫 Laravel Route Restrictor
 
 Laravel Route Restrictor is a middleware package designed to restrict a entire site or specific routes using HTTP basic authentication. It is compatible with Laravel 5.1 or above.
 

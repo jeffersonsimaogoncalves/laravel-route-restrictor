@@ -119,7 +119,7 @@ class BasicAuthentication
             throw new Exception('Error determining current route.');
         }
 
-        if (count($routes) != 1) {
+        if (get_class($routes) != \Illuminate\Routing\Route::class && count($routes) != 1) {
             $routes = $routes->first();
         }
         

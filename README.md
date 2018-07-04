@@ -1,6 +1,6 @@
 # 🚫 Laravel Route Restrictor
 
-Laravel Route Restrictor is a middleware package designed to restrict a entire site or specific routes using HTTP basic authentication. It is compatible with Laravel 5.1 or above.
+Laravel Route Restrictor is a middleware package designed to restrict a entire site or specific routes using HTTP basic authentication. It is compatible with Laravel 5.1 to 5.6.
 
 ## Setup
 
@@ -26,7 +26,7 @@ Alternatively, you can modify the global restriction username and password in yo
 
 ## Restricting specific routes
 
-To restrict specific routes, you must edit your routing file at `app/Http/routes.php`. Simply surround the route or routes you want to restrict with the following route group code. Ensure you change the `username` and `password` middleware parameters.
+To restrict specific routes, you must edit your routes file. Simply surround the route or routes you want to restrict with the following route group code. Ensure you change the `username` and `password` middleware parameters.
 
 ```php
 Route::group(['middleware' => 'routeRestrictor:username,password'], function () {
@@ -38,7 +38,7 @@ Note: If you have both route specific restrictions and a global restriction, bot
 
 ## Excluding specific routes from restriction
 
-If you wish to exclude one or more routes from restriction, you must edit your routing file at `app/Http/routes.php`. Simply surround the route or routes you want to exclude with the following route group code.
+If you wish to exclude one or more routes from restriction, you must edit your routes file. Simply surround the route or routes you want to exclude with the following route group code.
 
 ```php
 Route::group(['middleware' => 'routeRestrictor:disable'], function () {

@@ -111,8 +111,9 @@ class BasicAuthentication
      */
     private function specificRouteRestrictionExists()
     {
+        $requestMethod = isset($_POST['_method']) ? $_POST['_method'] : $_SERVER['REQUEST_METHOD'];
         
-        $routes = app('router')->getRoutes()->match(app('request')->create($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']));
+        $routes = app('router')->getRoutes()->match(app('request')->create($_SERVER['REQUEST_URI'], $requestMethod));
 
 
         if (!$routes) {
